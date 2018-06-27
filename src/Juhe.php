@@ -19,19 +19,19 @@ class Juhe
      * @param  boolean $isTplParam [是否开启消息模板]
      * @param  array   $tplParam   [消息模板 多变量格式：'#code#=1234&#company#=聚合数据']
      */
-    public function zendJuheCurl($sendUrl = '', array $sceneParam = [], $isTplParam = false, array $tplParam = [])
+    public function zendJuheCurl($sendUrl = '', array $sceneParam = [], $isPost = 1, $isTplParam = false, array $tplParam = [])
     {
         if (empty($sendUrl) || empty($sceneParam) ) {
             //缺少参数
             return -1;
         } else {
-            if (!$isTplParam || empty($tplParam)) {
+            if ($isTplParam && empty($tplParam)) {
                 //缺少模板可选参数
                 return -2;
             } else {
                 $zendParam = array_merge($sceneParam, $tplParam);
 
-                $content = $this->juhecurl($sendUrl, $zendParam, 1); //请求发送短信
+                $content = $this->juhecurl($sendUrl, $zendParam, $isPost); //请求发送短信
 
                 if($content){
                     return $result = json_decode($content, true);
@@ -58,20 +58,19 @@ class Juhe
         curl_setopt( $ch, CURLOPT_CONNECTTIMEOUT , 30 );
         curl_setopt( $ch, CURLOPT_TIMEOUT , 30);
         curl_setopt( $ch, CURLOPT_RETURNTRANSFER , true );
-        if( $ispost )
-        {
+
+        if( $ispost ) {
             curl_setopt( $ch , CURLOPT_POST , true );
             curl_setopt( $ch , CURLOPT_POSTFIELDS , $params );
             curl_setopt( $ch , CURLOPT_URL , $url );
-        }
-        else
-        {
+        } else {
             if($params){
-                curl_setopt( $ch , CURLOPT_URL , $url.'?'.$params );
+                curl_setopt( $ch , CURLOPT_URL , $url.'?'. http_build_query($params) );
             }else{
                 curl_setopt( $ch , CURLOPT_URL , $url);
             }
         }
+
         $response = curl_exec( $ch );
         if ($response === FALSE) {
             //echo "cURL Error: " . curl_error($ch);
