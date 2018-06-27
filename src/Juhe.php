@@ -16,6 +16,7 @@ class Juhe
      * [zendJuheCurl 聚合通用调度API]
      * @param  string  $sendUrl    [API请求地址]
      * @param  array   $sceneParam [默认参数]
+     * @param  boolean $isPost     [是否使用POST请求，默认POST]
      * @param  boolean $isTplParam [是否开启消息模板]
      * @param  array   $tplParam   [消息模板 多变量格式：'#code#=1234&#company#=聚合数据']
      */
